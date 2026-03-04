@@ -1,0 +1,21 @@
+@import "tailwindcss";
+.loading-dots::after {
+  content: "";
+  animation: dots 1.5s infinite;
+};
+
+@keyframes dots {
+  0%   { content: ""; }
+  25%  { content: "."; }
+  50%  { content: ".."; }
+  75%  { content: "..."; }
+  100% { content: ""; }
+};
+.bulkmail-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 2.0px;
+  color: #e0e7ff;
+ 
+};
+
