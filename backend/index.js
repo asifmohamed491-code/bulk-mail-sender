@@ -11,12 +11,12 @@ app.use(cors())
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)
-.then(() => {
-    console.log("Connected to DB")
-})
-.catch(() => {
-    console.log("Failed to connect DB")
-})
+    .then(() => {
+        console.log("Connected to DB")
+    })
+    .catch(() => {
+        console.log("Failed to connect DB")
+    })
 
 // Collection
 const credential = mongoose.model("credential", {}, "bulkmail")
@@ -41,13 +41,14 @@ app.post("/sendmail", async (req, res) => {
         }
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
             auth: {
                 user: data[0].user,
                 pass: data[0].pass
             }
-        })
-
+        });
         for (let i = 0; i < emailList.length; i++) {
 
             await transporter.sendMail({
