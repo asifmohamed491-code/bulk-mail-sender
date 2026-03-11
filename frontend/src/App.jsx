@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import * as XLSX from "xlsx"
+import * as XLSX from "xlsx"    //* meaning xlsx la ulla all libraries into XLSX to store
 import './App.css'
 
 function App() {
@@ -14,88 +14,51 @@ function App() {
   }
 
   function handlefile(event) {
-
     const file = event.target.files[0]
 
-    const reader = new FileReader()
 
+    const reader = new FileReader();
     reader.onload = function (event) {
-
       const data = event.target.result
 
-      const workbook = XLSX.read(data,{type:"binary"})
-
+      const workbook = XLSX.read(data, { type: "binary" })
       const sheetName = workbook.SheetNames[0]
-
       const worksheet = workbook.Sheets[sheetName]
-
-      const emailList = XLSX.utils.sheet_to_json(worksheet,{header:'A'})
-
-      const totalemail = emailList
-        .map(item => item.A)
-        .filter(email => email && email.includes("@"))
-
+      const emailList = XLSX.utils.sheet_to_json(worksheet, { header: 'A' })
+      const totalemail = emailList.map(function(item){
+        return item.A
+      }) 
       setemailList(totalemail)
-
     }
-
-    reader.readAsBinaryString(file)
-
+    reader.readAsBinaryString(file);
   }
-
   function send() {
-
-    if(!msg){
-      alert("Enter message")
-      return
-    }
-
-    if(emailList.length === 0){
-      alert("Upload email file")
-      return
-    }
-
     setstatus(true)
-
-    axios.post(
-      "https://bulk-mail-sender-1-u9hg.onrender.com/sendmail",
-      { msg: msg , emailList: emailList }
-    )
-    .then(function (data) {
-
-      console.log(data.data)
-
-      if (data.data === true) {
-        alert("Email Sent Successfully")
-      }
-      else {
-        alert("Failed")
-      }
-
-      setstatus(false)
-
-    })
-    .catch(function(err){
-
-      console.log(err)
-
-      alert("Server Error")
-
-      setstatus(false)
-
-    })
-
+    axios.post("https://bulk-mail-sender-1-u9hg.onrender.com/sendmail", { msg: msg , emailList:emailList})
+      .then(function (data) {
+        if (data.data === true) {
+          alert("Email Sent Successfully")
+          setstatus(false)
+        }
+        else {
+          alert("Failed")
+          setstatus(false)
+        }
+      })
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 flex flex-col">
 
       {/* Header */}
-      <div className='bg-slate-950 text-center px-4 py-5'>
+      <div className='bg-slate-950   text-center px-4 py-5'>
         <div className='gap-3'>
+
+          {/* Brand Name */}
           <h1 className='bulkmail-logo text-2xl sm:text-3xl md:text-4xl '>
             BulkMail
           </h1>
+
         </div>
       </div>
 
@@ -128,7 +91,30 @@ function App() {
             <input
               onChange={handlefile}
               type="file"
-              className="w-full border-2 border-dashed border-indigo-700 rounded-lg p-4 sm:p-6 bg-slate-800 text-indigo-200"
+              className="
+                w-full
+                border-2 border-dashed border-indigo-700
+                rounded-lg
+                p-4 sm:p-6
+                bg-slate-800
+                text-indigo-200
+                hover:bg-slate-700
+                hover:border-indigo-500
+                transition-all duration-300
+                cursor-pointer
+                text-sm sm:text-base
+                file:mr-4
+                file:py-2
+                file:px-4
+                file:rounded-md
+                file:border-0
+                file:text-sm
+                file:font-medium
+                file:bg-indigo-600
+                file:text-white
+                hover:file:bg-indigo-500
+                file:cursor-pointer
+              "
             />
           </div>
 
@@ -139,11 +125,17 @@ function App() {
           <button
             onClick={send}
             disabled={status}
-            className='mt-6 w-full bg-indigo-600 hover:bg-indigo-500 py-3 rounded-lg font-medium text-white
-            shadow-lg hover:shadow-indigo-700/40 transition-all duration-300
+            className='mt-6 w-full bg-indigo-600 hover:bg-indigo-500 
+            py-3 rounded-lg font-medium text-white
+            shadow-lg hover:shadow-indigo-700/40
+            transition-all duration-300
             disabled:opacity-70 disabled:cursor-not-allowed text-sm sm:text-base'>
 
-            {status ? "Sending..." : "Send Emails"}
+            {status ? (
+              <span className="loading-dots">Sending</span>
+            ) : (
+              "Send Emails"
+            )}
 
           </button>
 
