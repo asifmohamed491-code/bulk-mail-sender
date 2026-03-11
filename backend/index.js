@@ -27,7 +27,7 @@ app.get("/",(req,res)=>{
 
 /* -------- Send Mail Route -------- */
 
-app.post("https://bulk-mail-sender-1-u9hg.onrender.com/sendmail", async (req,res)=>{
+app.post("/sendmail", async (req,res)=>{
 
     try{
 
